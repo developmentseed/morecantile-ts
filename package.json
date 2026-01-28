@@ -1,0 +1,63 @@
+{
+  "name": "@developmentseed/morecantile",
+  "version": "0.0.0",
+  "description": "TypeScript port of Morecantile for working with OGC TileMatrixSet grids",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch",
+    "clean": "rm -rf dist",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "format": "biome format .",
+    "format:fix": "biome format --write .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "publint": "publint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "tiles",
+    "tilematrixset",
+    "ogc",
+    "gis",
+    "maps"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/developmentseed/morecantile-ts.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.10",
+    "publint": "^0.3.16",
+    "typescript": "^5.9.3",
+    "vitest": "^3.1.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "packageManager": "pnpm@10.25.0",
+  "volta": {
+    "node": "24.11.1",
+    "pnpm": "10.25.0"
+  }
+}
