@@ -5,8 +5,9 @@
  * so that $ref'd types appear as bare names. We then prepend the correct import
  * statements based on the known dependency graph.
  *
- * The projJSON.json schema (~1000 lines of CRS subtypes) is replaced with an
- * opaque `ProjJSON` type alias.
+ * Only the schemas reachable from the four public exports (BoundingBox, CRS,
+ * TileMatrix, TileMatrixSet) are generated.  The projJSON.json schema (~1000
+ * lines of CRS subtypes) is replaced with an opaque `ProjJSON` type alias.
  */
 
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -25,24 +26,15 @@ const BANNER = `/* This file was automatically generated from OGC TMS 2.0 JSON S
 
 /**
  * Map from schema filename (without .json) to the type names it exports.
- * Determined empirically from json-schema-to-typescript output.
+ * Only schemas in the transitive closure of the four public types are listed.
  */
 const SCHEMA_EXPORTS: Record<string, string[]> = {
   "2DPoint": ["DPoint"],
   "2DBoundingBox": ["DBoundingBox"],
   crs: ["CRS"],
-  dataType: ["DataType"],
-  link: ["LinkSchema"],
-  timeStamp: ["TimeStamp"],
   variableMatrixWidth: ["VariableMatrixWidth"],
-  tileMatrixLimits: ["TileMatrixLimits"],
-  propertiesSchema: ["PropertiesSchema"],
-  style: ["Style"],
-  tilePoint: ["TilePoint"],
   tileMatrix: ["TileMatrix"],
   tileMatrixSet: ["TileMatrixSetDefinition"],
-  geospatialData: ["GeospatialData"],
-  tileSet: ["TileSetMetadata"],
 };
 
 /**
@@ -53,37 +45,9 @@ const SCHEMA_DEPS: Record<string, string[]> = {
   "2DPoint": [],
   "2DBoundingBox": ["2DPoint", "crs"],
   crs: [],
-  dataType: [],
-  link: [],
-  timeStamp: [],
   variableMatrixWidth: [],
-  tileMatrixLimits: [],
-  propertiesSchema: [],
-  style: ["link"],
-  tilePoint: ["crs"],
   tileMatrix: ["2DPoint", "variableMatrixWidth"],
   tileMatrixSet: ["crs", "2DBoundingBox", "tileMatrix"],
-  geospatialData: [
-    "dataType",
-    "crs",
-    "2DBoundingBox",
-    "timeStamp",
-    "style",
-    "propertiesSchema",
-    "link",
-  ],
-  tileSet: [
-    "dataType",
-    "tileMatrixLimits",
-    "crs",
-    "2DBoundingBox",
-    "timeStamp",
-    "geospatialData",
-    "style",
-    "tilePoint",
-    "tileMatrixSet",
-    "link",
-  ],
 };
 
 /** Build an import block, only including types that appear in the generated code. */
@@ -125,7 +89,12 @@ async function compileSchema(schemaName: string): Promise<string> {
     },
   });
 
-  return ts;
+  // The OGC schemas attach descriptions to $ref properties via
+  // allOf: [{ description }, { $ref }].  json-schema-to-typescript renders
+  // the description-only object as { [k: string]: unknown } and intersects
+  // it with the $ref'd type.  That intersection makes the type incompatible
+  // with plain JSON imports.  Strip it — only the $ref'd type name matters.
+  return ts.replace(/\(\{\s*\[k: string\]: unknown\s*\} & (\w+)\)/g, "$1");
 }
 
 async function main() {
