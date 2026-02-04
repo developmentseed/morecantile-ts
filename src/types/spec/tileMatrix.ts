@@ -37,9 +37,7 @@ export interface TileMatrix {
    * The corner of the tile matrix (_topLeft_ or _bottomLeft_) used as the origin for numbering tile rows and columns. This corner is also a corner of the (0, 0) tile.
    */
   cornerOfOrigin?: "topLeft" | "bottomLeft";
-  pointOfOrigin: {
-    [k: string]: unknown;
-  } & DPoint;
+  pointOfOrigin: DPoint;
   /**
    * Width of each tile of this tile matrix in pixels
    */

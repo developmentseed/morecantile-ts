@@ -34,16 +34,12 @@ export interface TileMatrixSetDefinition {
    * @minItems 1
    */
   orderedAxes?: [string, ...string[]];
-  crs: {
-    [k: string]: unknown;
-  } & CRS;
+  crs: CRS;
   /**
    * Reference to a well-known scale set
    */
   wellKnownScaleSet?: string;
-  boundingBox?: {
-    [k: string]: unknown;
-  } & DBoundingBox;
+  boundingBox?: DBoundingBox;
   /**
    * Describes scale levels and its tile matrices
    */
