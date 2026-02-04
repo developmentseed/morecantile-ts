@@ -2,18 +2,21 @@ import { describe, expect, it } from "vitest";
 // ---------------------------------------------------------------------------
 // Fixture helpers — pull zoom levels out of the bundled OGC example files.
 // ---------------------------------------------------------------------------
-import CDB1 from "../spec/schemas/tms/2.0/json/examples/tilematrixset/CDB1GlobalGrid.json";
-import GNOSIS from "../spec/schemas/tms/2.0/json/examples/tilematrixset/GNOSISGlobalGrid.json";
-import UTM31 from "../spec/schemas/tms/2.0/json/examples/tilematrixset/UTM31WGS84Quad.json";
-import WebMercator from "../spec/schemas/tms/2.0/json/examples/tilematrixset/WebMercatorQuad.json";
-import WorldCRS84 from "../spec/schemas/tms/2.0/json/examples/tilematrixset/WorldCRS84Quad.json";
+import _CDB1 from "../spec/schemas/tms/2.0/json/examples/tilematrixset/CDB1GlobalGrid.json";
+import _GNOSIS from "../spec/schemas/tms/2.0/json/examples/tilematrixset/GNOSISGlobalGrid.json";
+import _UTM31 from "../spec/schemas/tms/2.0/json/examples/tilematrixset/UTM31WGS84Quad.json";
+import _WebMercator from "../spec/schemas/tms/2.0/json/examples/tilematrixset/WebMercatorQuad.json";
+import _WorldCRS84 from "../spec/schemas/tms/2.0/json/examples/tilematrixset/WorldCRS84Quad.json";
 import { matrixTransform, tileTransform } from "../src/transform";
-import type { TileMatrix } from "../src/types/index";
+import type { TileMatrix, TileMatrixSet } from "../src/types/index";
 
-function findMatrix(
-  tms: { tileMatrices: TileMatrix[] },
-  id: string,
-): TileMatrix {
+const CDB1 = _CDB1 as TileMatrixSet;
+const GNOSIS = _GNOSIS as TileMatrixSet;
+const UTM31 = _UTM31 as TileMatrixSet;
+const WebMercator = _WebMercator as TileMatrixSet;
+const WorldCRS84 = _WorldCRS84 as TileMatrixSet;
+
+function findMatrix(tms: TileMatrixSet, id: string): TileMatrix {
   const m = tms.tileMatrices.find((m) => m.id === id);
   if (!m) throw new Error(`no matrix with id "${id}"`);
   return m;
