@@ -28,8 +28,7 @@ jobs:
       - run: pnpm test
       - name: Read version and publish
         run: |
-          # All packages are expected to have the same version
-          VERSION=$(jq -r .version packages/deck.gl-raster/package.json)
+          VERSION=$(jq -r .version package.json)
           if [[ "$VERSION" == *alpha* || "$VERSION" == *beta* ]]; then
             pnpm publish --recursive --no-git-checks --tag beta
           else
