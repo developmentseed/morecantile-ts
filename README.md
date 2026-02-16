@@ -1,5 +1,7 @@
 # morecantile-ts
 
+**Development has moved to https://github.com/developmentseed/deck.gl-raster.**
+
 ![](./assets//morecantile-diagram.jpg)
 
 > Image credit [@vincentsarago].
